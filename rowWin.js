@@ -11,13 +11,11 @@ export class RowWin {
         for (let i = 0; i < 6; i++) {
             let row = [];
             this.columns.forEach(column => {
-                // console.log(column)
                 row.push(column.tokens[i]);
-                // console.log(row);
             });
             rows.push(row);
         }
-        console.log(rows);
+        // console.log(rows);
 
         let chain = {
             token: "",

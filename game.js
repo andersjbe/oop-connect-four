@@ -1,7 +1,7 @@
 import { Column } from './column.js';
 import { ColumnWin } from "./columnWin.js";
 import { RowWin } from "./rowWin.js";
-
+import { DiagonalWin } from './diagonalWin.js';
 
 
 export class Game {
@@ -35,6 +35,7 @@ export class Game {
         this.checkForTie();
         this.checkForColumnWin();
         this.checkForRowWin();
+        this.checkForDiagonalWin();
 
         if (this.counter === 1) {
             this.counter = 2;
@@ -97,8 +98,23 @@ export class Game {
             }
         }
 
+    }
 
+    checkForDiagonalWin() {
+        if (this.winnerNumber !== 0) {
+            return;
+        }
 
+        let columnGroups = [this.columns.slice(0, 4), this.columns.slice(1, 5), this.columns.slice(2, 6), this.columns.slice(3, 7)];
+
+        for (let i = 0; i < columnGroups.length; i++) {
+            let diagonalWin = new DiagonalWin(columnGroups[i]);
+            let win = diagonalWin.inspect();
+            if (win > 0) {
+                this.winnerNumber = win;
+                break;
+            }
+        }
 
     }
 

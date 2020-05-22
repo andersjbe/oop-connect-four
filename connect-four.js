@@ -1,4 +1,6 @@
 import { Game } from './game.js';
+import { GameSerializer } from "./gameSerializer.js";
+import { GameDeserializer } from "./gameDeserializer.js";
 
 let game = undefined;
 
@@ -10,12 +12,13 @@ const updateUi = () => {
         document.getElementById('game-name').innerHTML = game.getName();
         // show the current players color checker in the top row
         let currentPlayer = game.counter;
+        const clickTargets = document.getElementById('click-targets');
         if (currentPlayer === 1) {
-            event.target.classList.add('black');
-            event.target.classList.remove('red');
+            clickTargets.classList.add('black');
+            clickTargets.classList.remove('red');
         } else {
-            event.target.classList.add('red');
-            event.target.classList.remove('black');
+            clickTargets.classList.add('red');
+            clickTargets.classList.remove('black');
         }
         // render the checkers on the board
         for (let i = 0; i <= 5; i++) {
@@ -75,11 +78,16 @@ document.addEventListener('DOMContentLoaded', e => {
 
     document.getElementById('click-targets').addEventListener('click', ev => {
         let column = Number.parseInt(ev.target.id.slice(ev.target.id.length - 1));
-        if (column.classList.includes('full')) {
-            return;
-        }
         game.playInColumn(column);
         updateUi();
+        const serializer = new GameSerializer(game);
+        window.localStorage.setItem('gameState', serializer.serialize());
     });
+
+    if (window.localStorage.getItem('gameState') !== null) {
+        const deserializer = new GameDeserializer(window.localStorage.getItem('gameState'));
+        game = deserializer.deserialize();
+        updateUi();
+    }
 
 });
